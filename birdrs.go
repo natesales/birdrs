@@ -12,7 +12,7 @@ import (
 	"unsafe"
 )
 
-var release = "development" // set by build process
+var release = "dev" // set by build process
 
 var (
 	hostKeyFile = flag.String("k", "~/.ssh/id_ed25519", "SSH host key file")
