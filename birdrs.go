@@ -6,6 +6,7 @@ import (
 	"github.com/creack/pty"
 	"github.com/gliderlabs/ssh"
 	"io"
+	"io/ioutil"
 	"log"
 	"os/exec"
 	"syscall"
@@ -17,6 +18,7 @@ var release = "dev" // set by build process
 var (
 	hostKeyFile = flag.String("k", "~/.ssh/id_ed25519", "SSH host key file")
 	listenPort  = flag.String("b", ":22", "SSH daemon bind address:port")
+	bannerPath  = flag.String("m", "", "path to text file for connection banner")
 	verbose     = flag.Bool("v", false, "enable verbose debugging output")
 	birdPath    = flag.String("p", "birdc", "path to birdc binary")
 )
@@ -33,10 +35,23 @@ func main() {
 		log.Println("verbose logging enabled")
 	}
 
+	var banner []byte
+	if *bannerPath != "" { // If bannerPath is set
+		_banner, err := ioutil.ReadFile(*bannerPath)
+		if err != nil {
+			log.Fatalf("reading banner file %s: %v", *bannerPath, err)
+		}
+		banner = _banner // TODO: Fix scope here
+	}
+
 	log.Printf("starting birdrs %s\n", release)
 	log.Printf("using bird path: %s\n", *birdPath)
 
 	ssh.Handle(func(s ssh.Session) {
+		if *bannerPath != "" { // If bannerPath is set
+			s.Write(banner)
+		}
+
 		cmd := exec.Command(*birdPath, "-r") // -r flag for restricted mode
 		ptyReq, winCh, isPty := s.Pty()
 		if isPty {
