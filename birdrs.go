@@ -15,9 +15,10 @@ import (
 var release = "development" // set by build process
 
 var (
-	listenPort = flag.String("b", ":22", "SSH daemon bind address:port")
-	verbose    = flag.Bool("v", false, "enable verbose debugging output")
-	birdPath   = flag.String("p", "birdc", "path to birdc binary")
+	hostKeyFile = flag.String("k", "~/.ssh/id_ed25519", "SSH host key file")
+	listenPort  = flag.String("b", ":22", "SSH daemon bind address:port")
+	verbose     = flag.Bool("v", false, "enable verbose debugging output")
+	birdPath    = flag.String("p", "birdc", "path to birdc binary")
 )
 
 func main() {
@@ -77,5 +78,5 @@ func main() {
 	})
 
 	log.Printf("starting birdrs ssh server on port %s\n", *listenPort)
-	log.Fatal(ssh.ListenAndServe(*listenPort, nil))
+	log.Fatal(ssh.ListenAndServe(*listenPort, nil, ssh.HostKeyFile(*hostKeyFile)))
 }
