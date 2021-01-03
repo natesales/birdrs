@@ -29,7 +29,17 @@ jobs:
         run: go build -ldflags "-X main.release=${{ steps.vars.outputs.tag }} -v"
 
       - name: Make debian build directory
-        run: mkdir -p {debian/DEBIAN/,debian/usr/bin/}
+        run: mkdir -p {debian/DEBIAN/,debian/usr/bin/,debian/lib/systemd/system/,debian/etc/default/}
+
+      - name: Copy service file
+        run: cp birdrs.service debian/lib/systemd/system/birdrs.service
+
+      - name: Copy env defaults
+        run: |
+          echo "# Default settings for birdrs
+          # Options to pass to birdrs
+          BIRDRS_OPTS=""
+          " > debian/etc/default/birdrs
 
       - name: Copy binary
         run: cp birdrs debian/usr/bin/

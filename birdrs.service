@@ -1,0 +1,13 @@
+[Unit]
+Description=SSH route server for BIRD
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/birdrs
+ExecStart=/usr/bin/birdrs $BIRDRS_OPTS
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
