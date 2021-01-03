@@ -18,6 +18,8 @@ Usage for birdrs (dev) https://github.com/natesales/birdrs:
         SSH daemon bind address:port (default ":22")
   -k string
         SSH host key file (default "~/.ssh/id_ed25519")
+  -m string
+        path to text file for connection banner
   -p string
         path to birdc binary (default "birdc")
   -v    enable verbose debugging output
