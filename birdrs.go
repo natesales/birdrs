@@ -37,7 +37,7 @@ func main() {
 	log.Printf("using bird path: %s\n", *birdPath)
 
 	ssh.Handle(func(s ssh.Session) {
-		cmd := exec.Command(*birdPath)
+		cmd := exec.Command(*birdPath, "-r") // -r flag for restricted mode
 		ptyReq, winCh, isPty := s.Pty()
 		if isPty {
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
