@@ -48,6 +48,8 @@ func main() {
 	log.Printf("using bird path: %s\n", *birdPath)
 
 	ssh.Handle(func(s ssh.Session) {
+		log.Printf("new connection from %s\n", s.RemoteAddr())
+
 		if *bannerPath != "" { // If bannerPath is set
 			s.Write(banner)
 		}
